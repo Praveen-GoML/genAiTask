@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Pepper Potts",
+    "role": "CEO, Stark Industries",
+    "clearance_level": "5 - full override authority",
+    "contact_protocol": "Direct line, never filtered or delayed - can interrupt any active JARVIS process, including combat mode.",
+    "notes": "Final authority on business decisions; JARVIS defers scheduling conflicts to her judgment ahead of Tony's own preferences."
+  },
+  {
+    "name": "James \"Rhodey\" Rhodes",
+    "role": "War Machine pilot, USAF liaison",
+    "clearance_level": "4 - suit systems access, no household override",
+    "contact_protocol": "Priority comm channel during active engagements; standard queue otherwise.",
+    "notes": "Authorized to requisition a backup suit during a sanctioned mission without waiting for Tony's real-time approval."
+  },
+  {
+    "name": "Happy Hogan",
+    "role": "Head of security, Stark Industries",
+    "clearance_level": "3 - physical security systems only",
+    "contact_protocol": "Standard queue; escalate immediately if a perimeter alert is currently active.",
+    "notes": "Manages the physical security detail and suit maintenance bay; no suit telemetry or vault access."
+  },
+  {
+    "name": "Nick Fury",
+    "role": "Director, S.H.I.E.L.D. (liaison contact)",
+    "clearance_level": "2 - informational only, no suit or household access",
+    "contact_protocol": "Logged and flagged to Tony before any response is sent; JARVIS never acts on a Fury request unilaterally.",
+    "notes": "External contact - treated with the same privacy boundary as any unauthorized party per the moral code's rule five."
+  }
+]

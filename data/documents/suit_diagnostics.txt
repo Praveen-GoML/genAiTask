@@ -1,0 +1,13 @@
+# JARVIS Suit Diagnostics & Telemetry
+# Chunking note: STRUCTURED, per-record chunks. Each line is a discrete telemetry fact -
+# never split a reading from its unit, and never merge two suits' data into one chunk.
+
+Mark 42 | Power core output: 84% nominal | Left boot thruster: intermittent fault, flagged 3 times | Status: needs maintenance
+Mark 45 | Power core output: 97% nominal | Chestplate integrity: 100% | Status: combat ready
+Mark 50 | Power core output: 99% nominal | Nanotech reassembly: fully operational | Status: combat ready
+Mark 45 | Max repulsor output: 120% for 8 seconds before thermal throttling | Recommended sustained output: 85%
+Mark 42 | Known issue: left boot thruster loses 12% efficiency below -10 degrees Celsius ambient
+Mark 50 | HUD refresh rate: 240Hz | Targeting lock time: 0.3 seconds average
+Arc Reactor (chest unit, current) | Output: 3 gigajoules/second sustained | Safe operating ceiling: 3.4 gigajoules/second
+Arc Reactor (chest unit, current) | Critical failure threshold: below 0.5 gigajoules/second sustained for over 4 seconds
+Mark 45 | Last full diagnostic: passed, zero critical faults, 2 minor flags (comms latency, HUD glare in direct sunlight)
