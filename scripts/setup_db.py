@@ -1,7 +1,6 @@
 """
-scripts/setup_db.py - creates the fleet-ops tables AND the least-privilege read-only
-role that src/nl2sql/pipeline.py actually executes generated SQL as (see
-src/db/database.py's module docstring for why there are two engines/roles at all).
+scripts/setup_db.py - creates the fitness DB tables AND the least-privilege read-only
+role that src/nl2sql/pipeline.py executes generated SQL as.
 
 Idempotent - safe to run against a brand-new database or one that already has the
 tables/role from a previous run.
@@ -46,7 +45,7 @@ def main():
         conn.execute(text(f"GRANT USAGE ON SCHEMA public TO {role}"))
         for table in Base.metadata.sorted_tables:
             conn.execute(text(f"GRANT SELECT ON {table.name} TO {role}"))
-        print(f"Granted SELECT-only access on {len(Base.metadata.sorted_tables)} fleet tables to '{role}'.")
+        print(f"Granted SELECT-only access on {len(Base.metadata.sorted_tables)} fitness tables to '{role}'.")
 
     print("\nDatabase is up to date.")
 

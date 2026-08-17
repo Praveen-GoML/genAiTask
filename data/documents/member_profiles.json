@@ -1,0 +1,72 @@
+[
+  {
+    "id": "M001",
+    "name": "Alex Rivera",
+    "age": 28,
+    "sex": "male",
+    "height_cm": 178,
+    "weight_kg": 82,
+    "goal": "muscle_gain",
+    "fitness_level": "intermediate",
+    "dietary_preference": "omnivore",
+    "injuries": "none",
+    "current_program": "Upper/Lower Split 4x/week",
+    "notes": "Works desk job. Struggles with hip flexor tightness. Trains 7am before work."
+  },
+  {
+    "id": "M002",
+    "name": "Priya Sharma",
+    "age": 34,
+    "sex": "female",
+    "height_cm": 163,
+    "weight_kg": 68,
+    "goal": "fat_loss",
+    "fitness_level": "beginner",
+    "dietary_preference": "vegetarian",
+    "injuries": "previous left knee patellofemoral pain (resolved)",
+    "current_program": "Full-Body 3x/week",
+    "notes": "Two young children — limited time. Prefers home workouts on weekends. Calorie target: 1750 kcal."
+  },
+  {
+    "id": "M003",
+    "name": "Jordan Lee",
+    "age": 22,
+    "sex": "male",
+    "height_cm": 185,
+    "weight_kg": 75,
+    "goal": "athletic_performance",
+    "fitness_level": "intermediate",
+    "dietary_preference": "omnivore",
+    "injuries": "mild right shoulder impingement — avoiding overhead pressing",
+    "current_program": "PPL 5x/week (modified — no OHP)",
+    "notes": "Plays recreational football on weekends. Prioritises explosiveness and cardio."
+  },
+  {
+    "id": "M004",
+    "name": "Simone Okafor",
+    "age": 45,
+    "sex": "female",
+    "height_cm": 170,
+    "weight_kg": 74,
+    "goal": "general_health",
+    "fitness_level": "beginner",
+    "dietary_preference": "vegan",
+    "injuries": "lower back stiffness (not acute)",
+    "current_program": "Full-Body 3x/week + 3x30min Zone 2 cardio",
+    "notes": "Returned to exercise after 10-year break. Focusing on building the habit first, intensity second."
+  },
+  {
+    "id": "M005",
+    "name": "Marcus Webb",
+    "age": 31,
+    "sex": "male",
+    "height_cm": 181,
+    "weight_kg": 90,
+    "goal": "muscle_gain",
+    "fitness_level": "advanced",
+    "dietary_preference": "omnivore",
+    "injuries": "none",
+    "current_program": "PPL 6x/week",
+    "notes": "Competitive natural bodybuilder. Currently in off-season bulk. Target body weight: 95kg at 12% BF."
+  }
+]

@@ -1,0 +1,49 @@
+FITMIND AI — RECOVERY PROTOCOLS
+================================
+
+WHY RECOVERY MATTERS
+---------------------
+Muscle growth does not happen during training — it happens during recovery. Progressive overload without adequate rest leads to overtraining syndrome: declining performance, persistent fatigue, elevated resting heart rate, mood disturbances, and increased injury risk.
+
+SLEEP
+------
+Sleep is the most powerful recovery tool available. During deep sleep (NREM stages 3–4), the body releases the majority of its daily growth hormone (GH) pulse. Aim for 7–9 hours per night for adults; competitive athletes may benefit from 9–10 hours.
+Sleep hygiene tips:
+  - Keep a consistent sleep and wake time, even on weekends.
+  - Keep the bedroom cool (16–19°C / 60–67°F) and dark.
+  - Avoid caffeine after 2 pm; it has a half-life of 5–6 hours.
+  - Limit screen exposure (blue light) 60 minutes before bed, or use blue-light-blocking glasses.
+  - Magnesium glycinate (200–400 mg before bed) may improve sleep quality.
+
+ACTIVE RECOVERY
+----------------
+Light movement on rest days increases blood flow to sore muscles, accelerating waste product removal and nutrient delivery without adding significant stress.
+Activities: 20–30 min walk, easy cycling, swimming, yoga, mobility flow.
+Heart rate should stay below 60% of maximum.
+
+FOAM ROLLING & STRETCHING
+--------------------------
+Foam rolling (self-myofascial release): Roll each major muscle group 30–90 seconds. Focus on tender spots. Best done pre-workout to reduce stiffness or post-workout to accelerate recovery. Do not roll directly over joints or the spine.
+Static stretching: Hold each stretch 30–60 seconds. Best performed post-workout when muscles are warm. Avoid aggressive static stretching immediately before strength training as it may temporarily reduce force output.
+
+ICE BATHS & CONTRAST THERAPY
+------------------------------
+Cold water immersion (CWI): 10–15 minutes at 10–15°C immediately post-training reduces DOMS (delayed onset muscle soreness) and perceived fatigue. Note: chronic use post-strength training may blunt long-term hypertrophy adaptations — use strategically (after competition, not after every session).
+Contrast therapy: Alternating cold (1–2 min) and hot (3–4 min) immersion, 3–5 cycles. More effective than cold alone for reducing subjective fatigue and improving recovery of power output.
+
+DELOAD WEEKS
+-------------
+Every 4–8 weeks of progressive training, insert a deload week: reduce training volume by 40–50% (keep intensity/weight similar). This allows connective tissue, the nervous system, and hormonal systems to fully recover. Signs you need a deload earlier: persistent joint pain, stalled progress for 2+ consecutive weeks, chronic fatigue.
+
+HEART RATE VARIABILITY (HRV) MONITORING
+-----------------------------------------
+HRV measures the variation between heartbeats — high HRV indicates good recovery; low or declining HRV signals accumulated fatigue. Measure first thing in the morning before getting out of bed. Tools: Whoop, Garmin, Polar, Oura Ring, or free apps with a chest strap.
+A sudden HRV drop of more than 20% below your personal baseline is a strong signal to reduce training intensity or volume that day.
+
+NUTRITION FOR RECOVERY
+-----------------------
+Protein: Consume 0.4 g/kg within 2 hours post-workout to maximise MPS. Casein protein before bed provides a slow-release amino acid supply overnight.
+Carbohydrates: Replenish glycogen with 1–1.2 g/kg in the first hour post-exercise for endurance athletes.
+Tart cherry juice (480 ml twice daily for 4–7 days around hard training blocks): shown in multiple RCTs to reduce muscle damage markers and DOMS.
+Omega-3 fatty acids (EPA+DHA, 2–3 g/day): anti-inflammatory effect reduces DOMS and supports joint health.
+Creatine monohydrate (3–5 g/day): improves recovery of power output between sessions, not just an acute performance booster.

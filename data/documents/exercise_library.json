@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Back Squat",
+    "category": "compound",
+    "primary_muscles": ["quadriceps", "glutes"],
+    "secondary_muscles": ["hamstrings", "erector_spinae", "core"],
+    "equipment": "barbell",
+    "difficulty": "intermediate",
+    "cues": "Brace core, chest up, knees track over toes. Break at the hip and knee simultaneously. Reach depth where hip crease is below the top of the knee.",
+    "common_errors": ["Knee cave (valgus collapse)", "Forward lean due to weak core or tight ankles", "Rising on toes — cue: spread the floor with your feet"]
+  },
+  {
+    "name": "Deadlift",
+    "category": "compound",
+    "primary_muscles": ["hamstrings", "glutes", "erector_spinae"],
+    "secondary_muscles": ["quadriceps", "lats", "traps", "core"],
+    "equipment": "barbell",
+    "difficulty": "intermediate",
+    "cues": "Neutral spine, bar over mid-foot, hinge at the hips before bending the knees. Drive the floor away. Squeeze glutes at lockout.",
+    "common_errors": ["Rounding the lower back", "Bar drifting away from the body", "Hyperextending at lockout"]
+  },
+  {
+    "name": "Bench Press",
+    "category": "compound",
+    "primary_muscles": ["pectoralis_major"],
+    "secondary_muscles": ["anterior_deltoid", "triceps"],
+    "equipment": "barbell",
+    "difficulty": "beginner",
+    "cues": "Retract scapulae, feet flat on floor. Bar path touches lower chest. Drive through the bar, not just the chest.",
+    "common_errors": ["Flaring elbows 90 degrees", "Bouncing bar off chest", "Losing arch — keep moderate natural arch, not forced"]
+  },
+  {
+    "name": "Pull-Up",
+    "category": "compound",
+    "primary_muscles": ["latissimus_dorsi"],
+    "secondary_muscles": ["biceps", "rear_deltoid", "rhomboids"],
+    "equipment": "pull-up bar",
+    "difficulty": "intermediate",
+    "cues": "Depress scapulae before pulling. Lead with chest to the bar, not chin. Full hang at bottom for full range of motion.",
+    "common_errors": ["Kipping without intent", "Partial range of motion", "Not depressing the scapula at the start"]
+  },
+  {
+    "name": "Romanian Deadlift (RDL)",
+    "category": "compound",
+    "primary_muscles": ["hamstrings", "glutes"],
+    "secondary_muscles": ["erector_spinae", "lats"],
+    "equipment": "barbell or dumbbells",
+    "difficulty": "beginner",
+    "cues": "Hip hinge movement. Soft knee bend, neutral spine. Feel stretch in hamstrings at bottom. Do not round the back.",
+    "common_errors": ["Treating it like a conventional deadlift (too much knee bend)", "Losing neutral spine at the bottom"]
+  },
+  {
+    "name": "Overhead Press (OHP)",
+    "category": "compound",
+    "primary_muscles": ["anterior_deltoid", "medial_deltoid"],
+    "secondary_muscles": ["triceps", "upper_pectorals", "serratus_anterior"],
+    "equipment": "barbell",
+    "difficulty": "intermediate",
+    "cues": "Bar starts at collar bone. Press in a slight arc over the head. Squeeze glutes to protect lower back. Do not hyperextend at lockout.",
+    "common_errors": ["Leaning back excessively", "Bar path too far forward", "Not engaging the core"]
+  },
+  {
+    "name": "Dumbbell Row",
+    "category": "compound",
+    "primary_muscles": ["latissimus_dorsi", "rhomboids"],
+    "secondary_muscles": ["biceps", "rear_deltoid", "traps"],
+    "equipment": "dumbbell",
+    "difficulty": "beginner",
+    "cues": "Brace on bench or knee. Drive elbow toward hip, not out to side. Squeeze the back at the top. Full stretch at the bottom.",
+    "common_errors": ["Using momentum", "Pulling with the bicep instead of the back", "Not retracting the scapula"]
+  },
+  {
+    "name": "Bulgarian Split Squat",
+    "category": "compound",
+    "primary_muscles": ["quadriceps", "glutes"],
+    "secondary_muscles": ["hamstrings", "core", "adductors"],
+    "equipment": "bench, dumbbells or barbell",
+    "difficulty": "intermediate",
+    "cues": "Front foot far enough forward that the shin is vertical at the bottom. Lower hips straight down. Front heel stays flat.",
+    "common_errors": ["Front foot too close (knee caves forward)", "Leaning excessively forward", "Hip instability — cue: think about sitting into the hip"]
+  },
+  {
+    "name": "Plank",
+    "category": "isolation",
+    "primary_muscles": ["transverse_abdominis", "rectus_abdominis", "core"],
+    "secondary_muscles": ["shoulders", "glutes"],
+    "equipment": "none",
+    "difficulty": "beginner",
+    "cues": "Neutral spine — no sagging hips or piked hips. Breathe steadily. Squeeze glutes and brace abs as if expecting a punch.",
+    "common_errors": ["Holding breath", "Sagging hips", "Head drooping — keep neck neutral"]
+  },
+  {
+    "name": "Hip Thrust",
+    "category": "compound",
+    "primary_muscles": ["glutes"],
+    "secondary_muscles": ["hamstrings", "core"],
+    "equipment": "barbell, bench",
+    "difficulty": "beginner",
+    "cues": "Upper back on bench, barbell over hips with pad. Drive hips up until body forms a straight line. Squeeze glutes hard at the top. Chin tucked.",
+    "common_errors": ["Hyperextending the lower back at the top", "Using hamstrings instead of glutes", "Bar rolling during movement"]
+  }
+]

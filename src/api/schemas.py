@@ -31,5 +31,5 @@ class SQLQueryResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: str
     knowledge_base: bool
-    ollama: bool
+    groq: bool          # replaces ollama: bool
     postgres: bool

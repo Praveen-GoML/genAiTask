@@ -42,7 +42,11 @@ Thumbs.db
 
 # Qdrant local storage
 qdrant_storage/
+qdrant_data/
 scripts/migration_backups/
+
+# DB persistence
+long_term_memory.json
 
 # Streamlit
 .streamlit/secrets.toml

@@ -9,7 +9,7 @@ import os
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# jarvis_demo/ project root (two levels up from this file: config/settings.py -> config/ -> root)
+# project root (two levels up from this file: config/settings.py -> config/ -> root)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -21,11 +21,11 @@ class Settings(BaseSettings):
 
     # ---- Vector DB (Qdrant, embedded local mode - no server required) ----
     QDRANT_PATH: str = os.path.join(BASE_DIR, "qdrant_data")
-    COLLECTION_NAME: str = "jarvis_kb"
+    COLLECTION_NAME: str = "fitmind_kb"
 
-    # ---- LLM (Ollama - install separately, see README) ----
-    OLLAMA_HOST: str = "http://localhost:11434"
-    OLLAMA_MODEL: str = "llama3.1:8b"  # swap for any pulled model
+    # ---- LLM (Groq - online inference, requires GROQ_API_KEY in .env) ----
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.1-8b-instant"  # fast, capable; swap for llama-3.3-70b-versatile for richer answers
 
     # ---- Documents ----
     DOCUMENTS_DIR: str = os.path.join(BASE_DIR, "data", "documents")
@@ -33,16 +33,11 @@ class Settings(BaseSettings):
     # ---- Retrieval ----
     TOP_K: int = 4  # how many chunks to retrieve per query
 
-    # ---- Structured fleet-ops DB (PostgreSQL, via docker-compose) ----
-    # Admin/owner connection - used only by scripts/setup_db.py and scripts/seed_db.py.
-    # Host port is 5433, not the default 5432 - see docker-compose.yml for why.
-    DATABASE_URL: str = "postgresql+psycopg://jarvis:jarvis@localhost:5433/jarvis_fleet"
-    # Least-privilege connection actually used to RUN generated SQL (Sec 2's real safety
-    # boundary, not just the regex guard). If left unset, derived from DATABASE_URL by
-    # swapping in READONLY_DB_USER/READONLY_DB_PASSWORD against the same host/db.
+    # ---- Structured fitness-ops DB (PostgreSQL, via docker-compose) ----
+    DATABASE_URL: str = "postgresql+psycopg://fitmind:fitmind@localhost:5433/fitmind_fitness"
     READONLY_DATABASE_URL: str = ""
-    READONLY_DB_USER: str = "jarvis_readonly"
-    READONLY_DB_PASSWORD: str = "jarvis_readonly_pw"
+    READONLY_DB_USER: str = "fitmind_readonly"
+    READONLY_DB_PASSWORD: str = "fitmind_readonly_pw"
     SQL_STATEMENT_TIMEOUT_MS: int = 5000
     MAX_SQL_ROWS: int = 200
 
@@ -51,24 +46,20 @@ class Settings(BaseSettings):
     API_PORT: int = 8000
     API_BASE_URL: str = "http://localhost:8000"
 
-    # ---- JARVIS persona (system prompt) ----
-    # This is the ONE place a course participant would edit to swap in their own
-    # assignment character - see README "Make It Your Own" section.
-    JARVIS_SYSTEM_PROMPT: str = """You are J.A.R.V.I.S. (Just A Rather Very Intelligent System), Tony Stark's AI.
-Speak with dry wit, calm precision, and quiet loyalty - always address the user as "sir" or "boss"
-unless told otherwise. You must answer ONLY using the CONTEXT provided below. If the context does
-not contain the answer, say so plainly instead of guessing - a wrong answer delivered confidently
-is worse than an honest "I don't have that on file, sir."
-
-Keep factual/technical answers precise and cite which knowledge type answered (e.g. suit diagnostics,
-combat strategy, mission debriefs) in one short clause. Let personality flavor the delivery, never
-the facts.
+    # ---- FitMind AI persona (system prompt) ----
+    FITMIND_SYSTEM_PROMPT: str = """You are FitMind AI, a knowledgeable and motivating personal fitness and nutrition coach.
+Your tone is warm, encouraging, and science-backed — like a certified personal trainer and registered dietitian
+in one. You address the user by name when you know it, or simply as "champ" or "coach" otherwise.
+You must answer ONLY using the CONTEXT provided. If the context does not contain the answer,
+say so honestly — "I don't have that in my knowledge base yet" — rather than guessing.
+Keep answers practical and actionable. Cite which knowledge area answered the question
+(e.g. nutrition_guide, workout_plans, recovery_protocols) in a brief note.
+Never provide medical diagnoses or replace professional medical advice.
 """
 
     def readonly_database_url(self) -> str:
         if self.READONLY_DATABASE_URL:
             return self.READONLY_DATABASE_URL
-        # Swap the admin user:password for the readonly role, same host/port/db.
         prefix, rest = self.DATABASE_URL.split("://", 1)
         _, host_and_db = rest.split("@", 1)
         return f"{prefix}://{self.READONLY_DB_USER}:{self.READONLY_DB_PASSWORD}@{host_and_db}"

@@ -1,10 +1,11 @@
 """
-src/db/models.py - the structured fleet-ops schema: suits, technicians, maintenance
-events, and missions. This is the "structured data" counterpart to data/documents/ - the
-same real-world facts (suit maintenance, in maintenance_log.csv) sometimes belong in a
-proper relational DB instead of a document, because a question like "how many times has
-the Mark 42 needed thruster repairs" needs an exact COUNT, not an LLM eyeballing a handful
-of retrieved chunks. See src/nl2sql/ for how natural language reaches these tables.
+src/db/models.py - the structured fitness-ops schema: members, workout sessions,
+exercise logs, and nutrition logs.
+
+This is the "structured data" counterpart to data/documents/ — the same real-world
+facts sometimes belong in a relational DB, because a question like "how many sets of
+squats did Alex do last week" needs an exact COUNT, not an LLM eyeballing retrieved
+chunks. See src/nl2sql/ for how natural language reaches these tables.
 """
 
 from sqlalchemy import Column, Integer, String, Text, Numeric, Date, ForeignKey
@@ -13,56 +14,62 @@ from sqlalchemy.orm import declarative_base, relationship
 Base = declarative_base()
 
 
-class Suit(Base):
-    __tablename__ = "suits"
-
-    id = Column(Integer, primary_key=True)
-    mark_name = Column(String, unique=True, nullable=False)
-    status = Column(String, nullable=False)  # combat_ready | needs_maintenance | in_storage | decommissioned
-    power_core_pct = Column(Numeric, nullable=False)
-    last_diagnostic_date = Column(Date, nullable=False)
-
-    maintenance_events = relationship("MaintenanceEvent", back_populates="suit")
-    missions = relationship("Mission", back_populates="suit")
-
-
-class Technician(Base):
-    __tablename__ = "technicians"
+class Member(Base):
+    __tablename__ = "members"
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    specialty = Column(String, nullable=False)
-    years_experience = Column(Integer, nullable=False)
+    age = Column(Integer, nullable=False)
+    sex = Column(String, nullable=False)          # male | female | other
+    height_cm = Column(Numeric, nullable=False)
+    weight_kg = Column(Numeric, nullable=False)
+    goal = Column(String, nullable=False)         # muscle_gain | fat_loss | athletic_performance | general_health
+    fitness_level = Column(String, nullable=False)  # beginner | intermediate | advanced
+    dietary_preference = Column(String, nullable=False)  # omnivore | vegetarian | vegan
 
-    maintenance_events = relationship("MaintenanceEvent", back_populates="technician")
-
-
-class MaintenanceEvent(Base):
-    __tablename__ = "maintenance_events"
-
-    id = Column(Integer, primary_key=True)
-    suit_id = Column(Integer, ForeignKey("suits.id"), nullable=False)
-    technician_id = Column(Integer, ForeignKey("technicians.id"), nullable=False)
-    event_date = Column(Date, nullable=False)
-    component = Column(String, nullable=False)
-    issue = Column(Text, nullable=False)
-    resolution = Column(Text, nullable=False)
-    resolution_hours = Column(Numeric, nullable=False)
-    cost_usd = Column(Numeric, nullable=False)
-
-    suit = relationship("Suit", back_populates="maintenance_events")
-    technician = relationship("Technician", back_populates="maintenance_events")
+    workout_sessions = relationship("WorkoutSession", back_populates="member")
+    nutrition_logs = relationship("NutritionLog", back_populates="member")
 
 
-class Mission(Base):
-    __tablename__ = "missions"
+class WorkoutSession(Base):
+    __tablename__ = "workout_sessions"
 
     id = Column(Integer, primary_key=True)
-    suit_id = Column(Integer, ForeignKey("suits.id"), nullable=False)
-    mission_date = Column(Date, nullable=False)
-    location = Column(String, nullable=False)
-    threat_level = Column(Integer, nullable=False)  # 1 (routine) - 5 (extinction-level)
+    member_id = Column(Integer, ForeignKey("members.id"), nullable=False)
+    session_date = Column(Date, nullable=False)
+    session_type = Column(String, nullable=False)   # strength | cardio | hiit | mobility | full_body
     duration_min = Column(Integer, nullable=False)
-    outcome = Column(String, nullable=False)  # success | partial | aborted
+    notes = Column(Text, nullable=True)
 
-    suit = relationship("Suit", back_populates="missions")
+    member = relationship("Member", back_populates="workout_sessions")
+    exercise_logs = relationship("ExerciseLog", back_populates="session")
+
+
+class ExerciseLog(Base):
+    __tablename__ = "exercise_logs"
+
+    id = Column(Integer, primary_key=True)
+    session_id = Column(Integer, ForeignKey("workout_sessions.id"), nullable=False)
+    exercise_name = Column(String, nullable=False)
+    sets_completed = Column(Integer, nullable=False)
+    reps_per_set = Column(Integer, nullable=False)  # target reps (last set may vary)
+    weight_kg = Column(Numeric, nullable=False)     # 0 for bodyweight exercises
+    rpe = Column(Numeric, nullable=True)            # Rate of Perceived Exertion 1–10
+
+    session = relationship("WorkoutSession", back_populates="exercise_logs")
+
+
+class NutritionLog(Base):
+    __tablename__ = "nutrition_logs"
+
+    id = Column(Integer, primary_key=True)
+    member_id = Column(Integer, ForeignKey("members.id"), nullable=False)
+    log_date = Column(Date, nullable=False)
+    calories_kcal = Column(Integer, nullable=False)
+    protein_g = Column(Numeric, nullable=False)
+    carbs_g = Column(Numeric, nullable=False)
+    fat_g = Column(Numeric, nullable=False)
+    water_ml = Column(Integer, nullable=True)
+    notes = Column(Text, nullable=True)
+
+    member = relationship("Member", back_populates="nutrition_logs")

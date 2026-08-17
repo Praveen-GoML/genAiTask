@@ -1,14 +1,13 @@
 """
-src/core/chunking.py - different chunking strategies for different JARVIS knowledge types.
+src/core/chunking.py - different chunking strategies for different FitMind AI knowledge types.
 
-This directly demonstrates the course's Ingestion & Chunking lesson along two axes at
-once: content STRUCTURE differs (a joke vs. a procedure needs a different split), and
-file FORMAT differs (plain text, Markdown, JSON, CSV, and HTML each need their own
-parser before you can even think about chunking). Each function below returns a list of
-(text, metadata) chunks.
+Demonstrates the Ingestion & Chunking lesson across two axes:
+  - Content STRUCTURE differs (a FAQ vs. a workout plan needs a different split)
+  - File FORMAT differs (plain text, Markdown, JSON, CSV — each needs its own parser)
+
+Each function returns a list of (text, metadata) chunks.
 """
 
-import csv
 import json
 import os
 import re
@@ -18,142 +17,149 @@ from config.settings import settings
 DOCUMENTS_DIR = settings.DOCUMENTS_DIR
 
 
-def _read(filename):
+def _read(filename: str) -> str:
     path = os.path.join(DOCUMENTS_DIR, filename)
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
 
-def _strip_comments(text):
-    """Remove the '# ...' explanatory comment lines at the top of each doc file."""
-    return "\n".join(line for line in text.splitlines() if not line.strip().startswith("#"))
+# ---------------------------------------------------------------------------
+# Chunking strategies
+# ---------------------------------------------------------------------------
 
-
-def chunk_by_sentence(filename, doc_type):
-    """One-liner / sentence-level chunking - for humor & personality lines.
-    Each quip must stand alone; mixing several into one chunk would dilute retrieval."""
-    text = _strip_comments(_read(filename))
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
-    return [(line, {"doc_type": doc_type, "source": filename, "strategy": "sentence"}) for line in lines]
-
-
-def chunk_by_paragraph(filename, doc_type):
-    """Paragraph-level semantic chunking - for moral code & practical support.
-    Each rule/routine needs its full reasoning kept intact in one chunk."""
-    text = _strip_comments(_read(filename))
-    paragraphs = [p.strip().replace("\n", " ") for p in re.split(r"\n\s*\n", text) if p.strip()]
-    return [(p, {"doc_type": doc_type, "source": filename, "strategy": "paragraph"}) for p in paragraphs]
-
-
-def chunk_by_record(filename, doc_type):
-    """Structured, per-record chunking - for suit diagnostics/telemetry.
-    Never separate a value from its unit, never merge two records into one chunk."""
-    text = _strip_comments(_read(filename))
-    records = [l.strip() for l in text.splitlines() if l.strip()]
-    return [(r, {"doc_type": doc_type, "source": filename, "strategy": "record"}) for r in records]
-
-
-def chunk_by_procedure(filename, doc_type):
-    """Recursive / structure-aware chunking - for combat strategy.
-    Each numbered procedure (with all its steps) stays together as ONE chunk, so a
-    generic fixed-size splitter can never cut a step in half or drop a threshold value."""
-    text = _strip_comments(_read(filename))
-    blocks = re.split(r"\n\s*\n(?=Procedure:)", text.strip())
-    chunks = []
-    for block in blocks:
-        block = block.strip()
-        if block:
-            title_match = re.match(r"Procedure:\s*(.+)", block)
-            title = title_match.group(1).strip() if title_match else "Untitled procedure"
-            chunks.append((block.replace("\n", " "), {"doc_type": doc_type, "source": filename, "strategy": "procedure", "title": title}))
-    return chunks
-
-
-def chunk_by_markdown_header(filename, doc_type):
-    """Markdown header-aware chunking - for mission debriefs.
-    Splits on '## ' section boundaries so a mission's outcome and lessons-learned never
-    get separated from its heading, no matter how many bullets sit underneath it."""
+def chunk_by_paragraph(filename: str, doc_type: str) -> list:
+    """Paragraph-level semantic chunking — for plain-text guides (nutrition, supplements,
+    recovery, injury prevention, workout plans, goal setting).
+    Each concept/protocol needs its full reasoning kept intact in one chunk."""
     text = _read(filename)
-    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)  # strip markdown-style comments
+    paragraphs = [
+        p.strip().replace("\n", " ")
+        for p in re.split(r"\n\s*\n", text)
+        if p.strip() and not p.strip().startswith("#")
+    ]
+    return [
+        (p, {"doc_type": doc_type, "source": filename, "strategy": "paragraph"})
+        for p in paragraphs
+    ]
+
+
+def chunk_by_markdown_header(filename: str, doc_type: str) -> list:
+    """Markdown header-aware chunking — for FAQ and meal plans.
+    Splits on '## ' section boundaries so each Q&A or meal plan section stays together."""
+    text = _read(filename)
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
     sections = re.split(r"\n(?=## )", text.strip())
     chunks = []
     for section in sections:
         section = section.strip()
         if not section or section.startswith("# "):
-            continue  # the lone H1 title (no leading "## ") isn't a mission of its own
+            continue  # skip the lone H1 title
         title_match = re.match(r"##\s*(.+)", section)
-        title = title_match.group(1).strip() if title_match else "Untitled mission"
+        title = title_match.group(1).strip() if title_match else "Untitled section"
         flat = re.sub(r"\s+", " ", section).strip()
-        chunks.append((flat, {"doc_type": doc_type, "source": filename, "strategy": "markdown_header", "title": title}))
+        chunks.append((
+            flat,
+            {"doc_type": doc_type, "source": filename, "strategy": "markdown_header", "title": title},
+        ))
     return chunks
 
 
-def chunk_by_json_record(filename, doc_type):
-    """Structured JSON chunking - for the allies directory.
-    Parses with json.load (never regex/text-split JSON) so one array element always
-    becomes exactly one chunk, with every field represented and none silently dropped."""
+def chunk_by_json_record(filename: str, doc_type: str) -> list:
+    """Structured JSON chunking — for exercise_library.json and member_profiles.json.
+    One array element = one chunk, so every field is represented and none silently dropped.
+    Uses json.load, never regex/text-splitting on raw JSON."""
     records = json.loads(_read(filename))
     chunks = []
     for record in records:
-        name = record.get("name", "Unknown")
-        fields = "; ".join(f"{k.replace('_', ' ').capitalize()}: {v}" for k, v in record.items() if k != "name")
-        flat = f"{name} - {fields}"
-        chunks.append((flat, {"doc_type": doc_type, "source": filename, "strategy": "json_record", "name": name}))
+        # Use 'name' as the primary identifier for both exercises and member profiles
+        name = record.get("name", record.get("id", "Unknown"))
+        fields = "; ".join(
+            f"{k.replace('_', ' ').capitalize()}: {v}"
+            for k, v in record.items()
+            if k not in ("name", "id")
+        )
+        flat = f"{name} — {fields}"
+        chunks.append((
+            flat,
+            {"doc_type": doc_type, "source": filename, "strategy": "json_record", "name": name},
+        ))
     return chunks
 
 
-def chunk_by_csv_row(filename, doc_type):
-    """Row-level CSV chunking - for the maintenance log.
-    Parses with csv.DictReader (never naive line-splitting) so each value stays bound to
-    its column header even if a field itself happens to contain a comma."""
-    path = os.path.join(DOCUMENTS_DIR, filename)
-    chunks = []
-    with open(path, "r", encoding="utf-8", newline="") as f:
-        for row in csv.DictReader(f):
-            flat = (
-                f"On {row['Date']}, {row['Suit']}'s {row['Component']} had an issue: "
-                f"{row['Issue']}. Resolution: {row['Resolution']}. Technician: {row['Technician']}."
-            )
-            chunks.append((flat, {"doc_type": doc_type, "source": filename, "strategy": "csv_row", "date": row["Date"]}))
-    return chunks
-
-
-def chunk_by_html_section(filename, doc_type):
-    """HTML tag-aware chunking - for the protocol manual.
-    Splits on <section> boundaries and strips markup, so retrieval returns clean prose
-    (never raw tags) and a section is never cut off mid-<ul>."""
+def chunk_by_section_header(filename: str, doc_type: str) -> list:
+    """All-caps section header chunking — for structured text files that use
+    ===== or ----- separator lines (supplement_guide.txt, injury_prevention.txt).
+    Each named section becomes one chunk."""
     text = _read(filename)
-    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)  # strip HTML comments first
-    sections = re.findall(r"<section>(.*?)</section>", text, flags=re.DOTALL)
+    # Split on lines that are all dashes or equals (section dividers)
+    blocks = re.split(r"\n[=\-]{4,}\n", text)
     chunks = []
-    for section in sections:
-        title_match = re.search(r"<h2>(.*?)</h2>", section, flags=re.DOTALL)
-        title = re.sub(r"\s+", " ", title_match.group(1)).strip() if title_match else "Untitled protocol"
-        clean = re.sub(r"<[^>]+>", " ", section)
-        clean = re.sub(r"\s+", " ", clean).strip()
-        chunks.append((clean, {"doc_type": doc_type, "source": filename, "strategy": "html_section", "title": title}))
+    for block in blocks:
+        block = block.strip()
+        if not block:
+            continue
+        flat = re.sub(r"\s+", " ", block).strip()
+        # Extract first non-empty line as the title
+        first_line = next((l.strip() for l in block.splitlines() if l.strip()), "Section")
+        chunks.append((
+            flat,
+            {"doc_type": doc_type, "source": filename, "strategy": "section_header", "title": first_line},
+        ))
     return chunks
 
 
-# The actual ingestion plan: which file uses which strategy, matching the course's cheat sheet.
+def chunk_by_workout_block(filename: str, doc_type: str) -> list:
+    """Workout-block chunking — for workout_plans.txt.
+    Splits on all-caps section headings (e.g. 'BEGINNER FULL-BODY PROGRAM') so each
+    program stays together as one retrievable chunk."""
+    text = _read(filename)
+    # Split on lines that are all-caps headings (optional dashes below)
+    blocks = re.split(r"\n(?=[A-Z][A-Z \/\-&()]{5,}\n[-]+)", text)
+    if len(blocks) <= 1:
+        # Fallback: split on double newlines if pattern didn't match
+        blocks = [b.strip() for b in re.split(r"\n\s*\n\n", text) if b.strip()]
+    chunks = []
+    for block in blocks:
+        block = block.strip()
+        if not block:
+            continue
+        first_line = next((l.strip() for l in block.splitlines() if l.strip()), "Program")
+        flat = re.sub(r"\s+", " ", block).strip()
+        chunks.append((
+            flat,
+            {"doc_type": doc_type, "source": filename, "strategy": "workout_block", "title": first_line},
+        ))
+    return chunks
+
+
+# ---------------------------------------------------------------------------
+# Ingestion plan: file → strategy → doc_type
+# ---------------------------------------------------------------------------
+
 INGESTION_PLAN = [
-    (chunk_by_sentence, "humor_style.txt", "humor"),
-    (chunk_by_paragraph, "moral_code.txt", "moral_code"),
-    (chunk_by_paragraph, "practical_support.txt", "practical_support"),
-    (chunk_by_record, "suit_diagnostics.txt", "suit_diagnostics"),
-    (chunk_by_procedure, "combat_strategy.txt", "combat_strategy"),
-    (chunk_by_markdown_header, "mission_debriefs.md", "mission_debriefs"),
-    (chunk_by_json_record, "allies_directory.json", "allies_directory"),
-    (chunk_by_csv_row, "maintenance_log.csv", "maintenance_log"),
-    (chunk_by_html_section, "protocol_manual.html", "protocol_manual"),
+    # Plain-text paragraph-based guides
+    (chunk_by_paragraph,        "nutrition_guide.txt",      "nutrition_guide"),
+    (chunk_by_paragraph,        "recovery_protocols.txt",   "recovery_protocols"),
+    (chunk_by_paragraph,        "goal_setting_guide.txt",   "goal_setting_guide"),
+    # Structured text with section headers
+    (chunk_by_section_header,   "supplement_guide.txt",     "supplement_guide"),
+    (chunk_by_section_header,   "injury_prevention.txt",    "injury_prevention"),
+    # Workout plans — block-level split
+    (chunk_by_workout_block,    "workout_plans.txt",        "workout_plans"),
+    # Markdown header-split documents
+    (chunk_by_markdown_header,  "faq.md",                   "faq"),
+    (chunk_by_markdown_header,  "meal_plans.md",            "meal_plans"),
+    # JSON record-per-item documents
+    (chunk_by_json_record,      "exercise_library.json",    "exercise_library"),
+    (chunk_by_json_record,      "member_profiles.json",     "member_profiles"),
 ]
 
 
-def build_all_chunks():
-    """Runs the full ingestion plan and returns every (text, metadata) chunk across all doc types."""
+def build_all_chunks() -> list:
+    """Runs the full ingestion plan and returns every (text, metadata) chunk."""
     all_chunks = []
     for chunk_fn, filename, doc_type in INGESTION_PLAN:
         chunks = chunk_fn(filename, doc_type)
         all_chunks.extend(chunks)
-        print(f"  {filename:<22} -> {chunk_fn.__name__:<20} -> {len(chunks)} chunks")
+        print(f"  {filename:<28} -> {chunk_fn.__name__:<26} -> {len(chunks)} chunks")
     return all_chunks

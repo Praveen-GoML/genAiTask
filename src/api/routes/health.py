@@ -3,7 +3,7 @@
 from fastapi import APIRouter
 
 from src.api.schemas import HealthResponse
-from src.core.llm import ollama_alive
+from src.core.llm import groq_alive
 from src.core.vector_store import collection_ready
 from src.db.database import db_reachable
 
@@ -15,6 +15,6 @@ def health():
     return HealthResponse(
         status="ok",
         knowledge_base=collection_ready(),
-        ollama=ollama_alive(),
+        groq=groq_alive(),
         postgres=db_reachable(),
     )

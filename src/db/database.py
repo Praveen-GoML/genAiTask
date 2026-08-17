@@ -16,14 +16,25 @@ from sqlalchemy.orm import sessionmaker
 
 from config.settings import settings
 
-engine = create_engine(settings.DATABASE_URL, pool_pre_ping=True)
+_connect_args = {"connect_timeout": 3}  # fail fast if Postgres is not up
+
+engine = create_engine(
+    settings.DATABASE_URL,
+    pool_pre_ping=False,
+    connect_args=_connect_args,
+)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
-readonly_engine = create_engine(settings.readonly_database_url(), pool_pre_ping=True)
+readonly_engine = create_engine(
+    settings.readonly_database_url(),
+    pool_pre_ping=False,
+    connect_args=_connect_args,
+)
 
 
 def db_reachable(use_readonly=True) -> bool:
-    """Best-effort health check used by the API's /health endpoint."""
+    """Best-effort health check used by the API's /health endpoint.
+    Times out in 3 s so startup never blocks if Postgres is down."""
     target = readonly_engine if use_readonly else engine
     try:
         with target.connect() as conn:

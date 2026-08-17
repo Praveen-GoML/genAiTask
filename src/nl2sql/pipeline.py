@@ -14,11 +14,11 @@ from src.nl2sql.generator import generate_sql
 from src.nl2sql.guard import UnsafeSQLError, validate_select_only
 from src.nl2sql.schema_introspection import get_schema_description
 
-ANSWER_SYSTEM_PROMPT = """You are J.A.R.V.I.S. You were given a question, the exact SQL
-query that was run against the structured fleet-operations database, and its results.
-Answer the question in one or two sentences, in character, using ONLY the numbers/rows
-shown - never invent a row that isn't there. If the result set is empty, say plainly that
-no matching records were found.
+ANSWER_SYSTEM_PROMPT = """You are FitMind AI. You were given a question, the exact SQL
+query that was run against the structured fitness database, and its results.
+Answer the question in one or two sentences, in a warm and motivating coaching voice,
+using ONLY the numbers/rows shown — never invent a row that isn't there.
+If the result set is empty, say plainly that no matching records were found.
 """
 
 
@@ -47,7 +47,7 @@ def answer(question: str) -> dict:
 
     if sql.strip().upper() == "NO_QUERY":
         return {"answer": None, "sql": None, "columns": [], "rows": [],
-                "error": "the question can't be answered from the fleet-ops schema"}
+                "error": "the question can't be answered from the fitness database schema"}
 
     for attempt in range(2):
         try:
